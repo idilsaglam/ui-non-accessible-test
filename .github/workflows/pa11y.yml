@@ -27,7 +27,7 @@ jobs:
       - name: Run Pa11y (Docker action)
         uses: Makepad-fr/pa11y-action@main
         with:
-          url: http://localhost:8080/index.html
+          url: http://host.docker.internal:8080/index.html
           standard: WCAG2AA
           reporter: json
           threshold: "0"         # fail on any issue
