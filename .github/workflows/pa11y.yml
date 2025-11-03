@@ -1,0 +1,50 @@
+name: Pa11y A11y Audit
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  pa11y:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Serve index.html
+        run: |
+          npx serve . -l 8080 &
+          for i in {1..30}; do
+            if curl -fsS http://localhost:8080/index.html >/dev/null; then
+              echo "Server is up"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "Server failed to start" >&2
+          exit 1
+
+      - name: Run Pa11y (Docker action)
+        uses: Makepad-fr/pa11y-action@main
+        with:
+          url: http://localhost:8080/index.html
+          standard: WCAG2AA
+          reporter: json
+          threshold: "0"         # fail on any issue
+          wait: "500"            # small delay for rendering (not strictly needed here)
+
+      - name: Upload report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pa11y-report
+          path: |
+            pa11y-report.json
+            pa11y-report.clean.json
+          if-no-files-found: warn
+
+      - name: Show a few lines for debugging
+        if: failure()
+        run: |
+          echo "--- http server log (tail) ---"
+          tail -n 100 /tmp/http.log || true
