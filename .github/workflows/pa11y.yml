@@ -42,8 +42,7 @@ jobs:
         if: always()
         with:
           name: pa11y-report
-          path: |
-            pa11y-report.json
+          path: ${{ steps.pa11y.outputs.report_path }}
           if-no-files-found: warn
 
       - name: Show a few lines for debugging
