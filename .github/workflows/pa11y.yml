@@ -29,7 +29,7 @@ jobs:
           curl -I http://localhost:8080/index.html || (echo "Server did not respond" >&2; exit 1)
 
       - name: Run Pa11yCI (Node.js action)
-        uses: Makepad-fr/pa11y-action@main
+        uses: Makepad-fr/pa11y-action@b1
         with:
           url: http://localhost:8080/index.html
           standard: WCAG2AA
