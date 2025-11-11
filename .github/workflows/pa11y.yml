@@ -28,7 +28,7 @@ jobs:
           # One final check and headers dump for debugging
           curl -I http://localhost:8080/index.html || (echo "Server did not respond" >&2; exit 1)
 
-      - name: Run Pa11yCI (Node.js action)
+      - name: Run Pa11y CI (Node action)
         uses: Makepad-fr/pa11y-action@b1
         with:
           url: http://localhost:8080/index.html
@@ -36,7 +36,6 @@ jobs:
           reporter: json
           threshold: "0"          # fail on any issue
           wait: "500"             # small delay for rendering
-          node_version: "24"
 
       - name: Upload report
         uses: actions/upload-artifact@v4
