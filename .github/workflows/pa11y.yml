@@ -24,14 +24,15 @@ jobs:
           echo "Server failed to start" >&2
           exit 1
 
-      - name: Run Pa11y (Docker action)
+      - name: Run Pa11yCI (Node.js action)
         uses: Makepad-fr/pa11y-action@main
         with:
-          url: https://vestiaire.io
+          url: http://localhost:8080/index.html
           standard: WCAG2AA
           reporter: json
-          threshold: "0"         # fail on any issue
-          wait: "500"            # small delay for rendering (not strictly needed here)
+          threshold: "0"          # fail on any issue
+          wait: "500"             # small delay for rendering
+          node_version: "24"
 
       - name: Upload report
         uses: actions/upload-artifact@v4
@@ -40,7 +41,6 @@ jobs:
           name: pa11y-report
           path: |
             pa11y-report.json
-            pa11y-report.clean.json
           if-no-files-found: warn
 
       - name: Show a few lines for debugging
